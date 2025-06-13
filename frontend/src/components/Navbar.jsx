@@ -4,11 +4,15 @@ import { NavLink } from "react-router-dom"
 
 export default function Navbar() {
   return (
-    <div className="flex items-center justify-between py-5 font-medium">
-        <div className="flex items-center">
-          <img className="w-36" src="/Logo.jpg" alt="" />
-          <span className="text-sm font-Poppins">Aadhya Signature Events</span>
-        </div>
+    <div className="flex flex-col justify-center items-center m-5"> 
+      <div className="flex items-center gap-8 my-10 ">
+      
+        <span className="font-allura text-5xl text-slate-500 tracking-widest"><span className="text-yellow-500">A</span>adhya <span className="text-yellow-500">S</span>ignature Events</span>
+      </div>
+
+    <hr className=" bg-gray-200 border-none h-[1.5px] w-full" />
+    <div className="flex items-center justify-center py-5 font-medium">
+       
     <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
 
       <NavLink to='/' className="flex flex-col items-center gap-1">
@@ -34,10 +38,12 @@ export default function Navbar() {
 
     </ul>
 
-    <div className="flex items-center gap-6">
+      </div>
+          <hr className=" bg-gray-200 border-none h-[1.5px] w-full" />
+
 
     </div>
 
-      </div>
+
   )
 }
