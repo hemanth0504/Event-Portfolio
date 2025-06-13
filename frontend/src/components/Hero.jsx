@@ -36,7 +36,7 @@ export default function Hero() {
           </h1>
 
           {/* Subtext */}
-          <p className="font-serif text-[#5A5A5A] text-base sm:text-lg md:text-sm  leading-relaxed">
+          <p className=" text-[#5A5A5A] text-base sm:text-lg md:text-sm  leading-relaxed">
             From timeless weddings to curated parties, we deliver elegance with every piece. Explore our collection of rentals, florals, and unforgettable designs.
           </p>
         </div>
