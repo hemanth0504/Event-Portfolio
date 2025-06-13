@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom"
 export default function Navbar() {
   return (
     <div className="flex flex-col justify-center items-center m-5"> 
-      <div className="flex items-center gap-8 my-10 ">
+      <div className="flex items-center gap-8 my-8">
  
 <span className="font-allura text-6xl tracking-widest font-semibold text-[#2E2E2E]">
   Aadhya Signature Events
