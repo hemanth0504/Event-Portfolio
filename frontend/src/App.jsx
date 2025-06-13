@@ -3,6 +3,7 @@ import Home from "./pages/Home"
 import Work from "./pages/Work"
 import Navbar from "./components/Navbar"
 import Contact from "./pages/Contact"
+import Footer from "./components/Footer"
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
       <Route path="/work" element={<Work/>}/>
       <Route path="/contact" element={<Contact/>}/>
     </Routes>
-
+    <Footer/>
    </div>
     </>
   )
