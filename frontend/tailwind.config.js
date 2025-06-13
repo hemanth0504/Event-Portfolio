@@ -9,6 +9,7 @@ export default {
       fontFamily:{
         Poppins: ['Poppins', 'sans-serif'],
         allura: ['Allura', 'cursive'],
+        serif: ['Playfair Display', 'serif'],
       }
     },
   },
