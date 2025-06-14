@@ -29,7 +29,7 @@ export default function Navbar() {
           <hr className="hidden w-2/4 border-none h-[1.5px] bg-gray-700" />
       </NavLink>
        <NavLink to='/services' className="flex flex-col items-center gap-1">
-          <p>SERVICES</p>
+          <p>RENTAL SERVICES</p>
           <hr className="hidden w-2/4 border-none h-[1.5px] bg-gray-700" />
       </NavLink>
        <NavLink to='/about' className="flex flex-col items-center gap-1">
