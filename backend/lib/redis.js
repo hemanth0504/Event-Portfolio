@@ -15,7 +15,6 @@ redis.on("error", function(err) {
 //key-value store
 
 await redis.connect()
-await redis.set('foo','bar');
 
 
 export default redis;
