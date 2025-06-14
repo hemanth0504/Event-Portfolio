@@ -17,7 +17,3 @@ app.listen(3000,()=>{
     console.log("Server is running on http://localhost:" + PORT)
     connectDB();
 })
-
-//s64wH6gBbDwyjmzL
-
-//hemanthteegala5
