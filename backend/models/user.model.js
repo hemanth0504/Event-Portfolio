@@ -21,19 +21,15 @@ const userSchema =  new mongoose.Schema ({
      minlength : [8,"Password must be at least 8 characters long"]
 
   },
-  cartItems:[
-    {
-        quantity :{
-          type:Number,
-          default:1
-          
-        },
-        product:{
-          type: mongoose.Schema.Types.ObjectId,
-          ref : "Product"
-        }
-    }
-  ],
+  cartItems: [
+  {
+    quantity: { type: Number, default: 1 },
+    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    rentalStart: Date,
+    rentalEnd: Date,
+  }
+],
+
   role :{
       type: String,
       enum : ['customer','admin'],
