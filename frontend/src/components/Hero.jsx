@@ -26,7 +26,7 @@ export default function Hero() {
 
           {/* Main Heading */}
           <h1 className="prata-regular text-5xl sm:text-6xl md:text-[7vh] text-[#2B2B2B] leading-none mb-4 py-2">
-            Rental & <br /> Decor Services Across <br /> New England
+            Decor & <br /> Rental Services Across <br /> New England
           </h1>
 
           {/* Subtext */}
