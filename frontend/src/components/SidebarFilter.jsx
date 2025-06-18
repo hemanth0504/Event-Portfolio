@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../lib/axios.js";
 
 export default function SidebarFilter({ selected, onSelect }) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/products/categories")
+  .get("/products/categories")
       .then((res) => setCategories(["All", ...res.data]))
       .catch((err) => console.error("Failed to load categories", err));
   }, []);
