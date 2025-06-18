@@ -1,26 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
+import { useUserStore } from "../stores/useUserStore.js"; 
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { login, loading } = useUserStore(); // ✅ Zustand methods
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitted");
+    await login(email, password); 
 
-    try {
-      await axios.post(
-        "http://localhost:3000/api/auth/login",
-        { email, password },
-        { withCredentials: true }
-      );
-      navigate("/");
-    } catch (error) {
-      console.error("Login error:", error.response?.data?.message || error.message);
-      alert("Login failed");
-    }
+
+  const user = useUserStore.getState().user;
+  console.log("Logged in user:", user); // ✅ Add this
+
+  if (user) {
+    navigate("/");
+  }
   };
 
   return (
@@ -28,7 +28,6 @@ export default function Login() {
       <div className="flex shadow-md rounded-md overflow-hidden">
         {/* Left form */}
         <div className="w-96 bg-white p-8 flex flex-col justify-center">
-          {/* Brand Heading */}
           <h2 className="font-allura text-3xl text-[#D9A5B3] text-center mb-6 tracking-wider">
             Aadhya Signature Events
           </h2>
@@ -81,9 +80,10 @@ export default function Login() {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-[#D9A5B3] text-white py-2 rounded-md text-sm hover:bg-[#c88a99] transition"
             >
-              Sign in
+              {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
