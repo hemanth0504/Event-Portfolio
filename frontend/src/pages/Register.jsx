@@ -1,35 +1,44 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
+import { useUserStore } from "../stores/useUserStore.js"; // ✅ import your Zustand store
 
 export default function Register() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { signup, loading } = useUserStore(); // ✅ destructure from store
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    await signup({
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      confirmPassword: form.confirmPassword,
+    });
 
-    try {
-      await axios.post(
-        "http://localhost:3000/api/auth/signup",
-        { name, email, password },
-        { withCredentials: true }
-      );
+    // ✅ navigate if successful (optional - Zustand doesn't return status directly)
+    if (useUserStore.getState().user) {
       navigate("/");
-    } catch (error) {
-      console.error("Signup error:", error.response?.data?.message || error.message);
-      alert("Registration failed");
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#FFFAF8] px-4 py-12">
       <div className="flex shadow-md rounded-md overflow-hidden">
-        {/* Left form */}
         <div className="w-96 bg-white p-8 flex flex-col justify-center">
-          {/* Brand Heading */}
           <h2 className="font-allura text-3xl text-[#D9A5B3] text-center mb-6 tracking-wider">
             Aadhya Signature Events
           </h2>
@@ -43,52 +52,63 @@ export default function Register() {
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">
-                Name
-              </label>
+              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">Name</label>
               <input
                 type="text"
+                name="name"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-[#2B2B2B] focus:outline-none focus:ring-1 focus:ring-[#D9A5B3]"
+                value={form.name}
+                onChange={handleChange}
+                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-[#D9A5B3]"
                 placeholder="Your full name"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">
-                Email
-              </label>
+              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">Email</label>
               <input
                 type="email"
+                name="email"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-[#2B2B2B] focus:outline-none focus:ring-1 focus:ring-[#D9A5B3]"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-[#D9A5B3]"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">
-                Password
-              </label>
+              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">Password</label>
               <input
                 type="password"
+                name="password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-[#2B2B2B] focus:outline-none focus:ring-1 focus:ring-[#D9A5B3]"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-[#D9A5B3]"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-[#2B2B2B] mb-1">Confirm Password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                required
+                value={form.confirmPassword}
+                onChange={handleChange}
+                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-[#D9A5B3]"
                 placeholder="••••••••"
               />
             </div>
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-[#D9A5B3] text-white py-2 rounded-md text-sm hover:bg-[#c88a99] transition"
             >
-              Register
+              {loading ? "Creating..." : "Register"}
             </button>
           </form>
 
@@ -103,13 +123,8 @@ export default function Register() {
           </div>
         </div>
 
-        {/* Right image */}
         <div className="w-96 hidden md:block">
-          <img
-            src="/Register.jpg"
-            alt="Decor"
-            className="w-full h-full object-cover"
-          />
+          <img src="/Register.jpg" alt="Decor" className="w-full h-full object-cover" />
         </div>
       </div>
     </div>
