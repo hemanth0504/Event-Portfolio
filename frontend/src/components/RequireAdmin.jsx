@@ -1,11 +1,18 @@
-// src/components/RequireAdmin.jsx
+
 import { Navigate } from "react-router-dom";
-import { useAuthContext } from "../context/useAuthContext.jsx";
+import { useUserStore } from "../stores/useUserStore";
 
 export default function RequireAdmin({ children }) {
-  const { user, loading } = useAuthContext();
+  const { user, checkingAuth } = useUserStore();
 
-  if (loading) return null; // or spinner
+  if (checkingAuth) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500">Checking admin access...</p>
+      </div>
+    );
+  }
+
   if (!user) return <Navigate to="/login" />;
   if (user.role !== "admin") return <Navigate to="/" />;
 
