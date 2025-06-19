@@ -1,15 +1,17 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-
-const decorItems = [
-  { title: "Backdrop", category: "Decor", price: 120 },
-  { title: "Sets", category: "Theme", price: 300 },
-  { title: "Garlands", category: "Florals", price: 50 },
-  { title: "Florals", category: "Florals", price: 75 },
-  { title: "Handi Tub", category: "Props", price: 40 },
-  { title: "Sofa", category: "Furniture", price: 250 },
-];
+import axios from "../lib/axios";
 
 export default function DecorsForRental() {
+  const [featuredItems, setFeaturedItems] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/products/featured")
+      .then((res) => setFeaturedItems(res.data))
+      .catch((err) => console.error("Failed to load featured items", err));
+  }, []);
+
   return (
     <section className="bg-white py-16 px-6 sm:px-12">
       <div className="max-w-7xl mx-auto text-center">
@@ -23,19 +25,23 @@ export default function DecorsForRental() {
 
         {/* Grid of Items */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-          {decorItems.map((item, index) => (
-            <div key={index} className="flex flex-col items-center text-center gap-3">
-              {/* Placeholder image */}
-              <div className="w-full aspect-square bg-[#FCEEEE] border border-gray-200 rounded-md"></div>
+          {featuredItems.map((item) => (
+            <div
+              key={item._id}
+              className="flex flex-col items-center text-center gap-3 bg-[#FCEEEE] border border-gray-200 rounded-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105"
+            >
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full aspect-square object-cover rounded-md"
+              />
 
-              {/* Item Title */}
-              <h3 className="text-[#2B2B2B] font-medium text-base">{item.title}</h3>
+              <h3 className="text-[#2B2B2B] font-medium text-base mt-2">{item.name}</h3>
+              <p className="text-xs text-[#8B8B8B]">
+  {typeof item.category === "string" ? item.category : item.category?.name || "N/A"}
+</p>
 
-              {/* Category */}
-              <p className="text-xs text-[#8B8B8B]">{item.category}</p>
-
-              {/* Price */}
-              <p className="text-sm font-semibold text-[#D9A5B3]">${item.price}</p>
+              <p className="text-sm font-semibold text-[#D9A5B3]">${item.pricePerDay}</p>
             </div>
           ))}
         </div>
