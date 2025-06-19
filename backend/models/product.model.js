@@ -11,8 +11,9 @@ const productSchema = new mongoose.Schema(
 			required: true,
 		},
 		category: {
-			type: String,
-			required: true, // e.g., "sofa", "garland", "backdrop"
+			type: mongoose.Schema.Types.ObjectId,
+      ref: "Category", 
+      required: true,
 		},
 		image: {
 			type: String,
