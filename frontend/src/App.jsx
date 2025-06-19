@@ -1,35 +1,55 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
-import Navbar from "./components/Navbar.jsx";
-import Footer from "./components/Footer.jsx";
-import ScrollToTop from "./components/ScrollToTop.jsx";
-import RequireAdmin from "./components/RequireAdmin.jsx";
+import { useUserStore } from "./stores/useUserStore";
 
-import Home from "./pages/Home.jsx";
-import Contact from "./pages/Contact.jsx";
-import About from "./pages/About.jsx";
-import Portfolio from "./pages/Portfolio.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Services from "./pages/RentalServices.jsx";
-import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+
+import Home from "./pages/Home";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
+import Portfolio from "./pages/Portfolio";
+import Services from "./pages/RentalServices";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+
+// Admin
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AllProducts from "./pages/admin/AllProducts";
+import AddProduct from "./pages/admin/AddProduct";
+import Events from "./pages/Events";
+import AllEvents from "./pages/admin/AllEvents";
+import AddEvent from "./pages/admin/AddEvent";
 
 function App() {
   const location = useLocation();
-  const hideLayout = ["/login", "/register", "/admin"].includes(location.pathname);
+  const { user, checkAuth } = useUserStore();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+
+  const isAuthPage = ["/login", "/register"].includes(location.pathname);
+  const isAdminPage = location.pathname.startsWith("/admin");
+
+  const showLayout = !isAuthPage && !isAdminPage;
 
   return (
-    <>
+    <div className="min-h-screen bg-white text-black">
       <ScrollToTop />
 
-      {/* Only show layout if not on auth pages */}
-      {!hideLayout && <Navbar />}
+      {showLayout && <Navbar />}
 
-      <div className={hideLayout ? "" : "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]"}>
+      <div className={showLayout ? "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]" : ""}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            {/* Main Routes */}
+            {/* Public Routes */}
             <Route
               path="/"
               element={
@@ -47,26 +67,34 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/services" element={<Services />} />
+              <Route path="/events" element={<Events />} />
+            {/* Auth Routes */}
+            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+            <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
 
-            {/* Auth Routes (no layout) */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            {/* Admin Protected Routes */}
+            <Route
+              path="/admin"
+              element={
+                user?.role === "admin" ? <AdminLayout /> : <Navigate to="/login" />
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<AllProducts />} />
+              <Route path="add-product" element={<AddProduct />} />
+               <Route path="events" element={<AllEvents/>} />
+                <Route path="add-event" element={<AddEvent />} />
+            </Route>
 
-              <Route
-    path="/admin"
-    element={
-      <RequireAdmin>
-        <AdminDashboard />
-      </RequireAdmin>
-    }
-  />
-
+            {/* Catch-all */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </AnimatePresence>
       </div>
 
-      {!hideLayout && <Footer />}
-    </>
+      {showLayout && <Footer />}
+      <Toaster />
+    </div>
   );
 }
 
