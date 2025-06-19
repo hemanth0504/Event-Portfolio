@@ -6,8 +6,8 @@ export default function SidebarFilter({ selected, onSelect }) {
 
   useEffect(() => {
     axios
-  .get("/products/categories")
-      .then((res) => setCategories(["All", ...res.data]))
+      .get("/products/categories")
+      .then((res) => setCategories(res.data))
       .catch((err) => console.error("Failed to load categories", err));
   }, []);
 
@@ -16,15 +16,25 @@ export default function SidebarFilter({ selected, onSelect }) {
       <h2 className="text-lg font-semibold mb-4 text-[#2B2B2B]">Filter by Category</h2>
 
       <ul className="space-y-2 text-[#6B6B6B] text-sm">
+        <li key="all">
+          <button
+            onClick={() => onSelect({ _id: "All", name: "All" })}
+            className={`text-left w-full hover:text-[#D9A5B3] transition ${
+              selected._id === "All" ? "text-[#D9A5B3] font-medium" : ""
+            }`}
+          >
+            All
+          </button>
+        </li>
         {categories.map((cat) => (
-          <li key={cat}>
+          <li key={cat._id}>
             <button
               onClick={() => onSelect(cat)}
               className={`text-left w-full hover:text-[#D9A5B3] transition ${
-                selected === cat ? "text-[#D9A5B3] font-medium" : ""
+                selected._id === cat._id ? "text-[#D9A5B3] font-medium" : ""
               }`}
             >
-              {cat}
+              {cat.name}
             </button>
           </li>
         ))}

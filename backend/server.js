@@ -6,6 +6,9 @@ import productRoutes from "./routes/product.route.js"
 import cartRoutes from "./routes/cart.route.js"
 import paymentRoutes from "./routes/payment.route.js"
 import categoryRoutes from "./routes/category.routes.js";
+import eventRoutes from "./routes/event.route.js";
+import eventCategoryRoutes from "./routes/eventCategory.route.js";
+
 
 import { connectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
@@ -31,7 +34,8 @@ app.use("/api/products",productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/payments",paymentRoutes);
 app.use("/api/categories", categoryRoutes);
-
+app.use("/api/events",eventRoutes);
+app.use("/api/event-categories",eventCategoryRoutes);
 
 console.log(PORT);
 

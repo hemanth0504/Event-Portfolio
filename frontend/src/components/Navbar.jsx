@@ -1,21 +1,17 @@
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, UserCircle } from "lucide-react";
-import axios from "axios";
-import {useState } from "react";
-import { useAuthContext } from "../context/useAuthContext.jsx";
+import { useState } from "react";
+import { useUserStore } from "../stores/useUserStore"; // ✅ Zustand store
 
 export default function Navbar() {
-
   const navigate = useNavigate();
-    const [showDropdown, setShowDropdown] = useState(false);
-     
-const { user, setUser } = useAuthContext();
+  const [showDropdown, setShowDropdown] = useState(false);
 
+  const { user, logout } = useUserStore(); // ✅ Zustand values
 
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/api/auth/logout", {}, { withCredentials: true });
-      setUser(null);
+      await logout();
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -43,6 +39,10 @@ const { user, setUser } = useAuthContext();
           </NavLink>
           <NavLink to='/portfolio' className="flex flex-col items-center gap-1">
             <p>PORTFOLIO</p>
+            <hr className="hidden w-2/4 border-none h-[1.5px] bg-gray-700" />
+          </NavLink>
+           <NavLink to='/events' className="flex flex-col items-center gap-1">
+            <p>EVENTS</p>
             <hr className="hidden w-2/4 border-none h-[1.5px] bg-gray-700" />
           </NavLink>
           <NavLink to='/services' className="flex flex-col items-center gap-1">
