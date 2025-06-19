@@ -34,6 +34,23 @@ export default function AdminSidebar() {
           >
             Add Product
           </NavLink>
+             <NavLink
+            to="/admin/events"
+            className={({ isActive }) =>
+              isActive ? "text-[#D38DA8] font-medium" : "text-gray-700"
+            }
+          >
+            All Events
+          </NavLink>
+          <NavLink
+            to="/admin/add-event"
+            className={({ isActive }) =>
+              isActive ? "text-[#D38DA8] font-medium" : "text-gray-700"
+            }
+          >
+            Add Event
+          </NavLink>
+        
         </nav>
       </div>
 
