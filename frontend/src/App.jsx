@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useUserStore } from "./stores/useUserStore";
+import { useCartStore } from "./stores/useCartStore";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -25,14 +26,36 @@ import AddProduct from "./pages/admin/AddProduct";
 import Events from "./pages/Events";
 import AllEvents from "./pages/admin/AllEvents";
 import AddEvent from "./pages/admin/AddEvent";
+import CartPage from "./pages/CartPage";
+import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
+import PurchaseCancelPage from "./pages/PurchaseCancelPage";
+import Profile from "./components/Profile";
+
+
 
 function App() {
   const location = useLocation();
-  const { user, checkAuth } = useUserStore();
+  const { user, checkAuth, checkingAuth } = useUserStore();
+  const { getCartItems } = useCartStore();
+
+
+
+useEffect(() => {
+  if (!user) checkAuth();
+}, [checkAuth, user]);
+  
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+		if (!user) return;
+
+		getCartItems();
+	}, [getCartItems, user]);
+
+  if (checkingAuth) {
+  return <div className="text-center mt-20">Checking authentication...</div>;
+}
+
+
 
 
   const isAuthPage = ["/login", "/register"].includes(location.pathname);
@@ -71,6 +94,15 @@ function App() {
             {/* Auth Routes */}
             <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+            <Route path='/cart' element={user ? <CartPage /> : <Navigate to='/login' />} />
+           <Route path='/profile' element={user ? <Profile /> : <Navigate to='/login' />} />
+           <Route
+  path='/purchase-success'
+  element={<PurchaseSuccessPage />}
+/>
+
+					<Route path='/purchase-cancel' element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />} />
+
 
             {/* Admin Protected Routes */}
             <Route
