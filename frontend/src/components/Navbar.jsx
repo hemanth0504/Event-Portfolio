@@ -1,13 +1,18 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { ShoppingCart, UserCircle } from "lucide-react";
 import { useState } from "react";
-import { useUserStore } from "../stores/useUserStore"; // ✅ Zustand store
+import { useUserStore } from "../stores/useUserStore"; // 
+import { useCartStore } from "../stores/useCartStore"; // 👈 add this
+
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const { user, logout } = useUserStore(); // ✅ Zustand values
+  const { cart } = useCartStore(); // 👈 Zustand cart state
+const cartQuantity = cart.reduce((sum, item) => sum + item.quantity, 0); // 👈 total items
+
 
   const handleLogout = async () => {
     try {
@@ -61,7 +66,14 @@ export default function Navbar() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-4 ml-4 relative">
-          <ShoppingCart className="w-6 h-6 cursor-pointer" onClick={() => navigate('/cart')} />
+          <div className="relative cursor-pointer" onClick={() => navigate('/cart')}>
+    <ShoppingCart className="w-6 h-6 text-[#2B2B2B]" />
+    {cartQuantity > 0 && (
+      <span className="absolute -top-2 -right-2 bg-[#D9A5B3] text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center shadow">
+        {cartQuantity}
+      </span>
+    )}
+  </div>
 
       <div className="relative">
   <UserCircle

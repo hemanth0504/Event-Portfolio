@@ -1,5 +1,6 @@
 export default function Portfolio() {
-  const images = Array.from({ length: 12 }, (_, i) => `https://picsum.photos/seed/${i + 1}/600/40${i % 5 + 1}`);
+  // Use local images from public/portfolio/
+  const images = Array.from({ length: 6 }, (_, i) => `/portfolio/${i + 1}.jpg`);
 
   return (
     <div className="w-full">
