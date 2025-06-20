@@ -24,17 +24,16 @@ export const useUserStore = create((set, get) => ({
 		}
 	},
 	login: async (email, password) => {
-		set({ loading: true });
+	set({ loading: true, checkingAuth: true }); // ✅ also set checkingAuth true here
+	try {
+		const res = await axios.post("/auth/login", { email, password });
+		set({ user: res.data, loading: false, checkingAuth: false }); // ✅ success case
+	} catch (error) {
+		set({ loading: false, checkingAuth: false }); // ✅ critical fix: stop checkingAuth even on error
+		toast.error(error.response?.data?.message || "An error occurred");
+	}
+},
 
-		try {
-			const res = await axios.post("/auth/login", { email, password });
-
-			set({ user: res.data, loading: false });
-		} catch (error) {
-			set({ loading: false });
-			toast.error(error.response.data.message || "An error occurred");
-		}
-	},
 
 	logout: async () => {
 		try {
