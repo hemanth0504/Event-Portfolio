@@ -6,6 +6,13 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        background: "#FFFAF8",
+        primary: "#D9A5B3",
+        textMain: "#2B2B2B",
+        textMuted: "#6B6B6B",
+        borderLight: "#EAEAEA",
+      },
       fontFamily:{
         Poppins: ['Poppins', 'sans-serif'],
         allura: ['Allura', 'cursive'],

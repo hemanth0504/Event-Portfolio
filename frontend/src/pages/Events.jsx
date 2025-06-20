@@ -62,47 +62,43 @@ export default function Events() {
     fetchCategories();
   }, []);
 
-    console.log("Events from store:", events);
 
-  return (
-    <div className="flex px-6 py-10 gap-8 bg-[#FFFAF8]">
-      <EventSidebar
-        selected={selectedCategory}
-        onSelect={setSelectedCategory}
-        categories={categories}
-        loading={loadingCategories}
-      />
+return (
+  <div className="w-full px-6 py-10">
+    <EventSidebar
+      selected={selectedCategory}
+      onSelect={setSelectedCategory}
+      categories={categories}
+      loading={loadingCategories}
+    />
 
-      <div className="flex-1">
-        <h2 className="text-2xl font-semibold mb-6 text-[#2B2B2B]">
-          {selectedCategory._id === "All"
-            ? "Featured"
-            : selectedCategory.name}
-        </h2>
-
-        {loading ? (
-          <p>Loading events...</p>
-        ) : events.length === 0 ? (
-          <p>No events available.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event) => (
-              <div key={event._id} className="bg-white border rounded-md overflow-hidden shadow-sm">
-                <img
-                  src={event.images?.[0]?.url}
-                  alt={event.title}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-[#2B2B2B]">{event.title}</h3>
-                  <p className="text-sm text-gray-500">{new Date(event.eventDate).toLocaleDateString()}</p>
-                  <p className="text-[#D9A5B3] text-sm mt-1">{event.category?.name}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+    <div className="mt-10">
+      {loading ? (
+        <p>Loading events...</p>
+      ) : events.length === 0 ? (
+        <p>No events available.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
+          {events.map((event) => (
+            <div
+              key={event._id}
+              className="w-full h-[300px] overflow-hidden rounded-xl"
+            >
+              <img
+                src={event.images?.[0]?.url || "/fallback.jpg"}
+                onError={(e) => (e.currentTarget.src = "/fallback.jpg")}
+                alt=""
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
+ 
+  
+
 }

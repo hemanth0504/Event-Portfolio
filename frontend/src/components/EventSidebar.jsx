@@ -1,23 +1,26 @@
 export default function EventSidebar({ selected, onSelect, categories = [], loading }) {
   return (
-    <aside className="w-60 shrink-0 border-r pr-4">
-      <h2 className="text-lg font-semibold mb-4 text-[#2B2B2B]">Filter by Category</h2>
-      <ul className="space-y-2 text-[#6B6B6B] text-sm">
-       {categories.map((cat) => (
-  <li key={cat._id}>
-    <button
-      onClick={() => onSelect(cat)}
-      disabled={loading}
-      className={`text-left w-full hover:text-[#D9A5B3] transition ${
-        selected._id === cat._id ? "text-[#D9A5B3] font-medium" : ""
-      }`}
-    >
-      {cat.name}
-    </button>
-  </li>
-))}
+    <div className="w-full flex flex-col items-center py-6">
+      <h2 className="text-2xl font-semibold text-[#2B2B2B] mb-6 prata-regular"> Events</h2>
 
-      </ul>
-    </aside>
+      <div className="flex flex-wrap gap-3 border border-[#EAEAEA] rounded-full px-2 py-1 bg-white">
+
+        {categories.map((cat) => (
+          <button
+            key={cat._id}
+            onClick={() => onSelect(cat)}
+            disabled={loading}
+            className={`px-6 py-2 rounded-full transition font-medium
+              ${
+                selected?._id === cat._id
+                  ? "bg-[#D9A5B3] text-white"
+                  : "text-[#6B6B6B] hover:text-[#D9A5B3]"
+              }`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

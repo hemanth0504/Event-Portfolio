@@ -28,6 +28,8 @@ export const createCheckoutSession = async (req, res) => {
 			};
 		});
 
+
+
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ["card"],
 			line_items: lineItems,
@@ -48,6 +50,9 @@ export const createCheckoutSession = async (req, res) => {
 			},
 		});
 
+		console.log("✅ Stripe success URL:", `${process.env.CLIENT_URL}/purchase-success?session_id=${session.id}`);
+
+
 		res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
 	} catch (error) {
 		console.error("Error processing checkout:", error);
@@ -58,7 +63,13 @@ export const createCheckoutSession = async (req, res) => {
 export const checkoutSuccess = async (req, res) => {
 	try {
 		const { sessionId } = req.body;
+		console.log("Session ID received:", sessionId);
+
 		const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+		if (!session) {
+			return res.status(400).json({ success: false, message: "Session not found." });
+		}
 
 		if (session.payment_status === "paid") {
 			const products = JSON.parse(session.metadata.products);
@@ -66,26 +77,32 @@ export const checkoutSuccess = async (req, res) => {
 			const newOrder = new Order({
 				user: session.metadata.userId,
 				products: products.map((product) => ({
-  product: product.id,
-  quantity: product.quantity,
-  price: product.price,
-  rentalStart: product.rentalStart,
-  rentalEnd: product.rentalEnd
-})),
-				totalAmount: session.amount_total / 100, // convert from cents to dollars
+					product: product.id,
+					quantity: product.quantity,
+					price: product.price,
+					rentalStart: product.rentalStart,
+					rentalEnd: product.rentalEnd,
+				})),
+				totalAmount: session.amount_total / 100,
 				stripeSessionId: sessionId,
 			});
 
 			await newOrder.save();
 
-			res.status(200).json({
+			return res.status(200).json({
 				success: true,
 				message: "Payment successful and order created.",
 				orderId: newOrder._id,
 			});
+		} else {
+			// Payment not completed
+			return res.status(400).json({
+				success: false,
+				message: "Payment not completed yet.",
+			});
 		}
 	} catch (error) {
-		console.error("Error processing successful checkout:", error);
+		console.error("❌ Error processing successful checkout:", error);
 		res.status(500).json({ message: "Error processing successful checkout", error: error.message });
 	}
 };
