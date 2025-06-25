@@ -13,6 +13,7 @@ import path from "path";
 
 
 import { connectDB } from './lib/db.js';
+import redis, { connectRedis } from './lib/redis.js';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
 
@@ -48,7 +49,17 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-app.listen(PORT,()=>{
-    console.log("Server is running on http://localhost:" + PORT)
-    connectDB();
-})
+const startServer = async () => {
+  try {
+    await connectDB();
+    await connectRedis(); // ✅ correctly invoke the Redis connection// ✅ connect to Redis (Upstash)
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error('❌ Failed to start server:', err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
