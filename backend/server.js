@@ -15,6 +15,7 @@ import { dirname } from 'path';
 
 import { connectDB } from './lib/db.js';
 import redis, { connectRedis } from './lib/redis.js';
+import path from "path";
 import cookieParser from 'cookie-parser';
 import cors from "cors";
 
@@ -44,12 +45,13 @@ app.use("/api/events",eventRoutes);
 app.use("/api/event-categories",eventCategoryRoutes);
 
 if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+	app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+		res.sendFile(path.resolve(__dirname, "../frontend/dist", "index.html"));
 	});
 }
+
 
 const startServer = async () => {
   try {
