@@ -10,6 +10,8 @@ import eventRoutes from "./routes/event.route.js";
 import eventCategoryRoutes from "./routes/eventCategory.route.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import fs from "fs"; 
+
 
 
 
@@ -44,13 +46,23 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/events",eventRoutes);
 app.use("/api/event-categories",eventCategoryRoutes);
 
-/* if (process.env.NODE_ENV === "production") {
-	app.use(express.static(path.join(__dirname, "../frontend/dist")));
+if (process.env.NODE_ENV === "production") {
+	const frontendPath = path.join(__dirname, "../frontend/dist");
+
+	app.use(express.static(frontendPath)); // serve static files like CSS/JS
 
 	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "../frontend/dist", "index.html"));
+		const indexPath = path.join(frontendPath, "index.html");
+
+		// ✅ Check if file exists before trying to send it
+		if (fs.existsSync(indexPath)) {
+			res.sendFile(indexPath);
+		} else {
+			res.status(404).send("index.html not found");
+		}
 	});
-} */
+}
+
 
 
 const startServer = async () => {
