@@ -8,7 +8,8 @@ import paymentRoutes from "./routes/payment.route.js"
 import categoryRoutes from "./routes/category.routes.js";
 import eventRoutes from "./routes/event.route.js";
 import eventCategoryRoutes from "./routes/eventCategory.route.js";
-import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 
 
@@ -23,7 +24,8 @@ dotenv.config();
 
 const app = express(); 
 const PORT = process.env.PORT || 3000;
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 app.use(express.json()); // allows to parse the body of the request
 app.use(cookieParser());
 app.use(cors({
