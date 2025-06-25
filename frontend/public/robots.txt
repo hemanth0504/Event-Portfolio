@@ -1,0 +1,5 @@
+# public/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://aadhya-signature-events.onrender.com/sitemap.xml
